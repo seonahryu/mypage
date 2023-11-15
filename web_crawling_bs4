@@ -1,0 +1,25 @@
+# 데이터 크롤링(데이터 수집방법)
+
+# 페이지 요청 기능
+# Python 으로 HTML 을 다루는 기능
+# 시간(천천히)(ex대신증권(페이지 요청 1초에 5번=0.2초))
+
+from bs4 import BeautifulSoup # Python 으로 HTML 다루는 기능
+import requests # 페이지 요청
+import time # 천천히 => 올바르게
+
+url = requests.get("https://search.daum.net/search?w=tot&DA=YZR&t__nil_searchbox=btn&sug=&sugo=&sq=&o=&q=%EB%A1%9C%EB%98%90")
+#Response[200] : 정상(문제없음) // 400번대 : 존재하지 않는 페이지(ex 404) // 500번대 : 접근 제한(비공개, 로그인 필요 등)
+html = BeautifulSoup(url.text) # 가져온 HTML을 파이썬으로 다룰 수 있게 변환
+
+current = int(html.find("span", class_ = "f_red").text.replace('회','')) #  <태그> 빼고 그 뒤에 내용만 가져오기
+
+html.find("span", class_ = 'ball bg_ball1') # span 이란 태그의 속성값이 ball bg_ball1인 값을 찾고싶다
+
+numbers=html.find('div', class_= 'lottonum').find_all('span') # list 안에 9개의 html 들어가 있음
+del numbers[-2]
+del numbers[-2]
+
+box=[]
+for i in numbers:
+    box.append(int(i.text))
