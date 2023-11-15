@@ -1,0 +1,48 @@
+# 정적 사이트 : requests(페이지 요청)
+# 동적 사이트 : selenium (매크로, 로그인, 타이핑, 클릭 -> 블로그 포스팅 할 수 있음)(ex 인스타그램, 휠을 내리면 계속해서 새로운 페이지 나오는)
+
+!pip install selenium
+
+from selenium import webdriver
+driver=webdriver.Chrome()
+
+for n in range(1,11):
+    # 999회 url 보면 어느 부분이 회차를 나타내는지 보다 쉽게 알 수 있음
+    driver.get(f"https://search.daum.net/search?w=tot&rtmaxcoll=LOT&DA=LOT&q={n}%ED%9A%8C%20%EB%A1%9C%EB%98%90%EB%8B%B9%EC%B2%A8%EB%B2%88%ED%98%B8")
+    # Chrome 창 어디로 들어가라
+    time.sleep(1)
+
+    html=BeautifulSoup(driver.page_source)
+    #requests.get과 같은 역할
+
+    numbers=html.find('div', class_= 'lottonum').find_all('span')
+    #모든 번호 가져오기 위해 번호들을 포함하는 부분의 전체를 봄
+    del numbers[-2]
+    del numbers[-2]
+
+    box=[]
+    for i in numbers:
+        box.append(int(i.text))
+        
+    print(f'{n}회 로또 당첨번호 저장완료... {box}')
+
+
+for n in range(1,11):
+    driver.get(f"https://search.daum.net/search?w=tot&DA=JIM&rtmaxcoll=JIM&&q=%EC%97%B0%EA%B8%88%EB%B3%B5%EA%B6%8C%20720%2B%20{n}%ED%9A%8C%EC%B0%A8")
+    time.sleep(1)
+    
+    html=BeautifulSoup(driver.page_source)
+    numbers=html.find('tr', class_='fst').text.split()[5:]
+    numbers[0]=numbers[0][0]
+    numbers=list(map(int, numbers))
+    numbers
+    
+    box=[]
+    price=0
+    for i in numbers:
+        if i==numbers[0]:
+            price=i
+        else:
+            box.append(int(i))
+        
+    print(f'{n}회 연금복권 당첨번호 저장완료... {box} 당첨금액 {price}조')
